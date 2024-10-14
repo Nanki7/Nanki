@@ -1,0 +1,101 @@
+let blackCircles = [];
+let grayCircles = [];
+let whiteCircles = [];
+let lastHour = -1;
+let lastMinute = -1;
+let lastSecond = -1;
+
+function setup() {
+  createCanvas(800, 600); 
+  noStroke(); 
+}
+
+function draw() {
+  background(220); 
+
+  
+  let now = new Date();
+  let hours = now.getHours() % 24;  
+  let minutes = now.getMinutes();  
+  let seconds = now.getSeconds();  
+
+  
+  if (hours !== lastHour) {
+    updateHourCircles(blackCircles, hours, 'black');
+    lastHour = hours;
+  }
+
+ 
+  if (minutes !== lastMinute) {
+    updateMinuteCircles(grayCircles, minutes, 'gray');
+    lastMinute = minutes;
+  }
+
+  
+  if (seconds !== lastSecond) {
+    updateSecondCircles(whiteCircles, seconds, 'white');
+    lastSecond = seconds;
+  }
+
+ 
+  updateCircles(blackCircles);
+  updateCircles(grayCircles);
+  updateCircles(whiteCircles);
+}
+
+function updateCircles(circles) {
+  for (let i = 0; i < circles.length; i++) {
+    fill(circles[i].color);
+    circle(circles[i].x, circles[i].y, 20); 
+   
+    circles[i].x += circles[i].dx;
+    circles[i].y += circles[i].dy;
+
+    
+    if (circles[i].x > width - 10 || circles[i].x < 10) {
+      circles[i].dx *= -1; 
+    }
+    if (circles[i].y > height - 10 || circles[i].y < 10) {
+      circles[i].dy *= -1; 
+    }
+  }
+}
+
+function updateHourCircles(circleArray, hours, color) {
+
+  circleArray.length = 0;
+  for (let i = 0; i < hours; i++) {
+    circleArray.push(createCircle(color));
+  }
+}
+
+function updateMinuteCircles(circleArray, minutes, color) {
+  
+  circleArray.length = 0;
+  for (let i = 0; i < minutes; i++) {
+    circleArray.push(createCircle(color));
+  }
+}
+
+function updateSecondCircles(circleArray, seconds, color) {
+  
+  if (seconds < circleArray.length) {
+    circleArray.splice(seconds);
+  }
+
+  else {
+    for (let i = circleArray.length; i < seconds; i++) {
+      circleArray.push(createCircle(color));
+    }
+  }
+}
+
+function createCircle(color) {
+  return {
+    x: random(20, width - 20),
+    y: random(20, height - 20),
+    dx: random(-2, 2),
+    dy: random(-2, 2),
+    color: color
+  };
+}
