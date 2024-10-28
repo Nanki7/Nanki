@@ -1,0 +1,63 @@
+let squid = { x: 100, y: 100, headSize: 30, tentacleLength: 15 };
+let net = { size: 40 };            
+let score = 0;                   
+let squidSpeed = 2;                    
+
+function setup() {
+  createCanvas(400, 400);
+  noSmooth();  
+  noCursor();  
+}
+
+function draw() {
+  background(10, 20, 50);
+
+  fill(255);
+  textSize(16);
+  text("Score: " + score, 10, 20);
+
+  fill(255, 69, 0);  
+  rect(squid.x, squid.y, squid.headSize, squid.headSize); 
+
+
+  fill(255);  
+  rect(squid.x, squid.y + squid.headSize / 4, squid.headSize / 2, squid.headSize * 0.6);
+
+  rect(squid.x + squid.headSize * 0.5, squid.y + squid.headSize / 4, squid.headSize / 2, squid.headSize * 0.6); 
+
+  fill(0);  
+  rect(squid.x + squid.headSize * 0.1, squid.y + squid.headSize * 0.65, squid.headSize / 6, squid.headSize / 5); 
+  rect(squid.x + squid.headSize * 0.6, squid.y + squid.headSize * 0.65, squid.headSize / 6, squid.headSize / 5);
+
+  stroke(255, 69, 0);  
+  strokeWeight(3);   
+  for (let i = -3; i <= 3; i += 1) {
+    let xOffset = i * 5; 
+    line(
+      squid.x + squid.headSize / 2 + xOffset,
+      squid.y + squid.headSize,               
+      squid.x + squid.headSize / 2 + xOffset, 
+      squid.y + squid.headSize + squid.tentacleLength + random(-5, 5)
+    );
+  }
+
+  squid.x += floor(random(-squidSpeed, squidSpeed));
+  squid.y += floor(random(-squidSpeed, squidSpeed));
+
+  squid.x = constrain(squid.x, 0, width - squid.headSize);
+  squid.y = constrain(squid.y, 0, height - squid.headSize - squid.tentacleLength);
+
+  fill(255, 255, 255, 150); 
+  ellipse(mouseX, mouseY, net.size); 
+  fill(101, 67, 33); 
+  rect(mouseX - 2, mouseY + net.size / 2, 4, 25); 
+
+
+  let d = dist(mouseX, mouseY, squid.x + squid.headSize / 2, squid.y + squid.headSize / 2);
+  if (d < (net.size + squid.headSize) / 2) {
+
+    score++;                    
+    squid.x = random(width);  
+    squid.y = random(height);
+  }
+}
